@@ -88,6 +88,35 @@ public class PrayerUtilsTest
 		assertEquals(List.of("EAGLE_EYE", "MYSTIC_MIGHT"), PrayerUtils.getActivePrayers(client));
 	}
 
+	@Test
+	public void testPietyWithoutZealUnlocked()
+	{
+		activate(Prayer.PIETY);
+		when(client.getVarbitValue(VarbitID.PRAYER_ZEAL)).thenReturn(1);
+
+		assertEquals(List.of("PIETY"), PrayerUtils.getActivePrayers(client));
+	}
+
+	@Test
+	public void testZealReplacesPietyWhenUnlocked()
+	{
+		when(client.getVarbitValue(VarbitID.PRAYER_ZEAL_UNLOCKED)).thenReturn(1);
+		activate(Prayer.PIETY);
+		when(client.getVarbitValue(VarbitID.PRAYER_ZEAL)).thenReturn(1);
+
+		assertEquals(List.of("ZEAL"), PrayerUtils.getActivePrayers(client));
+	}
+
+	@Test
+	public void testZealUsedInLastManStandingWithoutUnlock()
+	{
+		when(client.getVarbitValue(VarbitID.BR_INGAME)).thenReturn(1);
+		activate(Prayer.PIETY);
+		when(client.getVarbitValue(VarbitID.PRAYER_ZEAL)).thenReturn(1);
+
+		assertEquals(List.of("ZEAL"), PrayerUtils.getActivePrayers(client));
+	}
+
 	private void activate(Prayer prayer)
 	{
 		when(client.getVarbitValue(prayer.getVarbit())).thenReturn(1);

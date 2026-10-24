@@ -149,6 +149,14 @@ public class MessageBuilderTest
 	}
 
 	@Test
+	public void testSetDataActivePrayers()
+	{
+		ActivePrayers activePrayers = new ActivePrayers(new ArrayList<>());
+		messageBuilder.setData("activePrayers", activePrayers);
+		assertNotNull(messageBuilder.getPlayer().getActivePrayers());
+	}
+
+	@Test
 	public void testSetDataCaseInsensitive()
 	{
 		messageBuilder.setData("NAME", "Player1");

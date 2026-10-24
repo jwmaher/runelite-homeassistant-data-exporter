@@ -58,6 +58,7 @@ public class HomeAssistUtilsDeliveryTest
 		HAExporterConfig config = mock(HAExporterConfig.class);
 		when(config.includeInventory()).thenReturn(true);
 		when(config.includeEquipment()).thenReturn(true);
+		when(config.includeActivePrayers()).thenReturn(true);
 		when(config.includeLocation()).thenReturn(true);
 		when(config.includeLootEvents()).thenReturn(true);
 		when(config.includeDeathEvents()).thenReturn(true);

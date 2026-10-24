@@ -22,6 +22,7 @@ public class HAConnectionTest
 
 		assertTrue(conn.isIncludeInventory());
 		assertTrue(conn.isIncludeEquipment());
+		assertTrue(conn.isIncludeActivePrayers());
 		assertTrue(conn.isIncludeLocation());
 	}
 
@@ -32,10 +33,12 @@ public class HAConnectionTest
 
 		conn.setIncludeInventory(false);
 		conn.setIncludeEquipment(false);
+		conn.setIncludeActivePrayers(false);
 		conn.setIncludeLocation(false);
 
 		assertFalse(conn.isIncludeInventory());
 		assertFalse(conn.isIncludeEquipment());
+		assertFalse(conn.isIncludeActivePrayers());
 		assertFalse(conn.isIncludeLocation());
 	}
 
@@ -52,6 +55,7 @@ public class HAConnectionTest
 		// The key contract: null Boolean == enabled
 		assertTrue(conn.isIncludeInventory());
 		assertTrue(conn.isIncludeEquipment());
+		assertTrue(conn.isIncludeActivePrayers());
 		assertTrue(conn.isIncludeLocation());
 	}
 

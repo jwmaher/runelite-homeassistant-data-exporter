@@ -22,7 +22,8 @@ public class HomeAssistUtilsFilterTest
 		+ "\"player\":{"
 		+ "\"name\":\"PlayerName\","
 		+ "\"location\":{\"x\":1640,\"y\":9562,\"plane\":0,\"isOnBoat\":false},"
-		+ "\"locationTrail\":[{\"x\":1640,\"y\":9562,\"plane\":0,\"isOnBoat\":false,\"timestamp\":1735689600000}]"
+		+ "\"locationTrail\":[{\"x\":1640,\"y\":9562,\"plane\":0,\"isOnBoat\":false,\"timestamp\":1735689600000}],"
+		+ "\"activePrayers\":{\"prayers\":[\"PROTECT_FROM_MELEE\",\"PIETY\"]}"
 		+ "},"
 		+ "\"events\":["
 		+ "{\"type\":\"levelUp\",\"data\":[{\"skill\":\"Attack\",\"level\":99}]}"
@@ -39,6 +40,7 @@ public class HomeAssistUtilsFilterTest
 		config = mock(HAExporterConfig.class);
 		when(config.includeInventory()).thenReturn(true);
 		when(config.includeEquipment()).thenReturn(true);
+		when(config.includeActivePrayers()).thenReturn(true);
 		when(config.includeLocation()).thenReturn(true);
 		when(config.includeLootEvents()).thenReturn(true);
 		when(config.includeDeathEvents()).thenReturn(true);
@@ -102,6 +104,37 @@ public class HomeAssistUtilsFilterTest
 
 		assertEquals(1, filtered.getAsJsonObject("player").getAsJsonArray("locationTrail").size());
 		assertEquals(List.of(), eventTypes(filtered));
+	}
+
+	@Test
+	public void testActivePrayersSentWhenShared()
+	{
+		JsonObject filtered = filter();
+
+		assertEquals(2, filtered.getAsJsonObject("player").getAsJsonObject("activePrayers").getAsJsonArray("prayers").size());
+	}
+
+	@Test
+	public void testConnectionWithoutActivePrayersGetsNone()
+	{
+		connection.setIncludeActivePrayers(false);
+
+		JsonObject filtered = filter();
+
+		assertFalse(filtered.getAsJsonObject("player").has("activePrayers"));
+		assertTrue(filtered.getAsJsonObject("player").has("location"));
+		assertEquals(List.of("levelUp"), eventTypes(filtered));
+	}
+
+	@Test
+	public void testGlobalActivePrayersSwitchRemovesPrayers()
+	{
+		when(config.includeActivePrayers()).thenReturn(false);
+
+		JsonObject filtered = filter();
+
+		assertFalse(filtered.getAsJsonObject("player").has("activePrayers"));
+		assertEquals(List.of("levelUp"), eventTypes(filtered));
 	}
 
 	private JsonObject filter()
